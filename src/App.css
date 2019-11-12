@@ -2,3 +2,13 @@
   text-align: center;
 }
 
+.App input{
+  margin-top: 20px;
+}
+.red{
+  color:red;
+}
+
+.bold{
+  font-weight: bold;
+}

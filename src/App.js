@@ -1,56 +1,52 @@
 import React, { Component } from 'react';
 import './App.css';
 import Person from './Person/Person';
-
+import ValidationInput from './ValidationInput/ValidationInput';
+import CharComp from './CharComp/CharComp';
 
 class App extends Component {
-  state = {
-     persons: [
-      {
-         name: 'Emmanuel',
-         age: 23
-      },
-      {
-          name: 'Victor',
-          age: 22
-      },
-       {
-          name: 'Francoise',
-          age: 21
-        }
-      ]
-    };
 
-    switchNameHandler = () =>{
-      
-      this.setState({
-        persons: [
-        {
-           name: 'Peter',
-           age: 24
-        },
-        {
-            name: 'Victor',
-            age: 22
-        },
-         {
-            name: 'Francoise',
-            age: 22
-          }
-        ]})
-      
-    }
-  render() {
+ state = {
+   characters: ''
+ };
+
+ getInputHandler = (event) => {
+ const inputString = event.target.value;
+  this.setState({
+    characters: inputString
+  }
+  );
+
+ }
+ deleteCharHandler = index =>{
+  const stringToArray = this.state.characters.split('');
+  stringToArray.splice(index, 1);
+  const updatedString = stringToArray.join('');
+  this.setState({characters: updatedString});
+ };
+  render () {
+  let character = '';
+  
+  character = this.state.characters.split('').map((c, index)=> {
+    return <CharComp 
+    eachChar={c}
+    key={index}
+    clicked={()=> this.deleteCharHandler(index)}
+    />
+    
+  });
+  
+ 
     return (
-    <div className="App">
-       <h1>This is React app</h1>
-       <p>I am testing!</p>
-       <button onClick={this.switchNameHandler}>Swicth Name</button>
-       <Person name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-       <Person name={this.state.persons[1].name} age={this.state.persons[1].age}> and I like wathing movies</Person>
-       <Person name={this.state.persons[2].name} age={this.state.persons[2].age}/>
-    </div>
+      <div className="App">
+        <input onChange={this.getInputHandler} type="text"/>
+        <ValidationInput
+        foundChars={this.state.characters.length}
+        />
+        {character}
+      </div>
     );
+    // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Does this work now?'));
   }
 }
 

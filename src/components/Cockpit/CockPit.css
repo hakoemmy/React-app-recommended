@@ -1,0 +1,29 @@
+.CockPit input{
+    margin-top: 20px;
+  }
+  .red{
+    color:red;
+  }
+  .bold{
+    font-weight: bold;
+  }
+  .CockPit button{
+    border: 1px solid blue;
+    background-color: green;
+    font: inherit;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .CockPit button:hover{
+    background-color: lightblue;
+    color: black;
+  }
+  .CockPit button.Red{
+    background-color: red;
+  }
+  .CockPit button.Red:hover{
+    background-color: salmon;
+    color: black;
+  }

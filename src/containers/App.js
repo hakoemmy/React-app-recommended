@@ -3,9 +3,17 @@ import React, { Component } from 'react';
 import classes from  './App.css';
 import Persons from '../components/Persons/Persons';
 import CockPit from '../components/Cockpit/Cockpit';
+import Aux from '../hoc/Auxilliary';
+import withClass from '../hoc/withClass';
+import AuthContext from '../context/authContext';
 
 
 class App extends Component {
+   constructor(props){
+     super(props);
+     console.log('[App.js] constructor');
+   };
+
   state = {
     persons: [
       { id: 'asfa1', name: 'Max', age: 28 },
@@ -13,8 +21,12 @@ class App extends Component {
       { id: 'asdf11', name: 'Stephanie', age: 26 }
     ],
     otherState: 'some other value',
-    showPersons: false
+    showPersons: false,
+    changeCounter: 0,
+    authenticated: false
   }
+
+ 
 
   nameChangedHandler = ( event, id ) => {
     const personIndex = this.state.persons.findIndex( p => {
@@ -30,7 +42,12 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState( { persons: persons } );
+    this.setState((prevState, props) => {
+      return { persons: persons,
+        changeCounter: prevState.changeCounter + 1
+      } 
+    }
+    );
   }
 
   deletePersonHandler = ( personIndex ) => {
@@ -43,9 +60,18 @@ class App extends Component {
     const doesShow = this.state.showPersons;
     this.setState( { showPersons: !doesShow } );
   }
-
+  loginHandler = () => {
+    this.setState({ authenticated: true});
+  }
+  logoutHandler = () => {
+    this.setState({ authenticated: false});
+  }
+  static getDerivedStateFromProps(props, state){
+    console.log('[App.js] getDerivedStateFromProps', props);
+    return state;
+  }
   render () {
-  
+    console.log('[App.js] render');
     let persons = null;
     if ( this.state.showPersons ) {
       persons = (
@@ -59,16 +85,27 @@ class App extends Component {
 
 
     return (
-      <div className={classes.App}>
+      <Aux>
+        <AuthContext.Provider value={
+          {
+            authenticated: this.state.authenticated,
+            login: this.loginHandler, logout: this.logoutHandler
+          }
+          }>
         <CockPit 
-        persons = {this.state.persons}
+        title={this.props.appTitle}
+        personsLength = {this.state.persons.length}
         showPersons = {this.state.showPersons}
         toggle = {this.togglePersonsHandler}
         />
         {persons}
-     </div>
+        </AuthContext.Provider>
+     </Aux>
     );
+  }
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
   }
 }
 
-export default App;
+export default withClass(App, classes.App);
